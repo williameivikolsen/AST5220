@@ -154,16 +154,6 @@ namespace Utils{
     // In this regime the function is <~ 1e-6 times the maximum value so safe to put it to zero
     // to avoid issues with the library functions failing to compute it
     if(ell >= 10 && x < (1.0 - 2.6/sqrt(ell)) * ell) return 0.0;
-
-#if ((defined(_MSVC_LANG) && _MSVC_LANG >= 201703L) || (__cplusplus >= 201703L))
-    // If you have a c++17 compiler you can use this
-    
-    // The library fails for the largest arguments so simply put to zero
-    // to avoid any issues with this (these large values not very relevant for us anyway)
-    if(x > 14000.0) return 0.0;
-    
-    return std::sph_bessel(ell, x);
-#else
     // Otherwise lets use GSL 
    
     // For 'small' ell GSL fails for the largest arguments so simply put to zero
@@ -171,17 +161,11 @@ namespace Utils{
     if(ell < 500 && x > 9000) return 0.0; 
 
     return gsl_sf_bessel_jl(ell, x);
-#endif
   }
 
   double J_n(const int n, const double x){
-#if ((defined(_MSVC_LANG) && _MSVC_LANG >= 201703L) || (__cplusplus >= 201703L))
-    // If you have a c++17 compiler you can use this
-    return std::cyl_bessel_j(n, x);
-#else
     if(n > 100 && x < 0.2 * n) return 0.0;
     return gsl_sf_bessel_Jn(n, x);
-#endif
   }
 
   // 2-point stencil with zero derivative at the end-points

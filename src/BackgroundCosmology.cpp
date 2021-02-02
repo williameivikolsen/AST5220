@@ -22,10 +22,10 @@ BackgroundCosmology::BackgroundCosmology(
   //=============================================================================
   // TODO: Compute OmegaR, OmegaNu, OmegaK, H0, ...
   //=============================================================================
-  //...
-  //...
-  //...
-  //...
+  OmegaNu = 0;
+  OmegaK = 0;
+  OmegaR = 1 - OmegaB - OmegaCDM - OmegaLambda - OmegaNu - OmegaK;
+  H0 = 70;    // (km/s)/Mpc
 }
 
 //====================================================
@@ -40,7 +40,7 @@ void BackgroundCosmology::solve(){
   // TODO: Set the range of x and the number of points for the splines
   // For this Utils::linspace(x_start, x_end, npts) is useful
   //=============================================================================
-  Vector x_array;
+  Vector x_array = Utils::linspace(0, 1, 100);
 
   // The ODE for deta/dx
   ODEFunction detadx = [&](double x, const double *eta, double *detadx){
