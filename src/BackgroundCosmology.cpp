@@ -22,9 +22,8 @@ BackgroundCosmology::BackgroundCosmology(
   //=============================================================================
   // TODO: Compute OmegaR, OmegaNu, OmegaK, H0, ...
   //=============================================================================
-  h = 0.7;
   H0 = 100*h*1000/3.0857e22;   // (km/s)/Mpc
-  OmegaNu = 0;
+  OmegaNu = Neff*7/8*pow(4/11, 4/3);
   OmegaK = 0;
   OmegaR = 1 - OmegaB - OmegaCDM - OmegaLambda - OmegaNu - OmegaK;
 }
@@ -138,7 +137,7 @@ double BackgroundCosmology::ddHpddx_of_x(double x) const{
   // Sjekk at denne ble riktig
 
   return H0*H0*((OmegaB + OmegaCDM)*exp(-x) + 4*(OmegaR + OmegaNu)*exp(-2*x) + 2*OmegaLambda*exp(2*x))/(2*Hp_of_x(x))
-  - H0*H0*pow((-(OmegaB + OmegaCDM)*exp(-x) -2*(OmegaR + OmegaNu)*exp(-2*x) + 2*OmegaLambda*exp(2*x)), 2)/(2*pow(Hp_of_x(x), 2));
+  - 0.5*pow(H0, 4)*pow((-(OmegaB + OmegaCDM)*exp(-x) -2*(OmegaR + OmegaNu)*exp(-2*x) + 2*OmegaLambda*exp(2*x)), 2)/(2*pow(Hp_of_x(x), 3));
 }
 
 double BackgroundCosmology::get_OmegaB(double x) const{ 
@@ -168,7 +167,7 @@ double BackgroundCosmology::get_OmegaNu(double x) const{
   // TODO: Implement...
   //=============================================================================
 
-  return OmegaR/(exp(4*x)*pow((H_of_x(x)/H0),2));
+  return OmegaNu/(exp(4*x)*pow((H_of_x(x)/H0),2));
 }
 
 double BackgroundCosmology::get_OmegaCDM(double x) const{ 
@@ -259,6 +258,7 @@ void BackgroundCosmology::output(const std::string filename) const{
     fp << eta_of_x(x)        << " ";
     fp << Hp_of_x(x)         << " ";
     fp << dHpdx_of_x(x)      << " ";
+    fp << ddHpddx_of_x(x)    << " ";
     fp << get_OmegaB(x)      << " ";
     fp << get_OmegaCDM(x)    << " ";
     fp << get_OmegaLambda(x) << " ";
