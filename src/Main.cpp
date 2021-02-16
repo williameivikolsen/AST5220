@@ -15,7 +15,7 @@ int main(int argc, char **argv){
   double h           = 0.67;
   double OmegaB      = 0.05;
   double OmegaCDM    = 0.267;
-  double OmegaLambda = 0.679;
+  double OmegaK      = 0.0;
   double Neff        = 0;
   double TCMB        = 2.7255;
 
@@ -27,7 +27,7 @@ int main(int argc, char **argv){
   //=========================================================================
 
   // Set up and solve the background
-  BackgroundCosmology cosmo(h, OmegaB, OmegaCDM, OmegaLambda, Neff, TCMB);
+  BackgroundCosmology cosmo(h, OmegaB, OmegaCDM, OmegaK, Neff, TCMB);
   cosmo.solve();
   cosmo.info();
   
