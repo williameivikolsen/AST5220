@@ -1,8 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import os
+# import seaborn as sns
 
 plt.rcParams.update({'font.size': 14})
+# plt.style.use('seaborn')
+# sns.set(font_scale=1.3)
 
 h            = 0.67
 OmegaB0      = 0.05
