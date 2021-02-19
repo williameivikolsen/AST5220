@@ -40,7 +40,7 @@ void BackgroundCosmology::solve(){
   // TODO: Set the range of x and the number of points for the splines
   // For this Utils::linspace(x_start, x_end, npts) is useful
   //=============================================================================
-  Vector x_array = Utils::linspace(x_start, x_end, 100);
+  Vector x_array = Utils::linspace(x_start, x_end, 1000);
 
   // The ODE for deta/dx
   ODEFunction detadx = [&](double x, const double *eta, double *detadx){
@@ -49,7 +49,7 @@ void BackgroundCosmology::solve(){
     // TODO: Set the rhs of the detadx ODE
     //=============================================================================
 
-    detadx[0] = 1/Hp_of_x(x);
+    detadx[0] = Constants.c/Hp_of_x(x);
 
     return GSL_SUCCESS;
   };
@@ -59,7 +59,7 @@ void BackgroundCosmology::solve(){
   // the spline eta_of_x_spline 
   //=============================================================================
 
-  double etaini = 0.0;
+  double etaini = Constants.c/Hp_of_x(x_start);
   Vector eta_ic{etaini};
 
   // Solve the ODE
@@ -123,7 +123,7 @@ double BackgroundCosmology::dHpdx_of_x(double x) const{
   // TODO: Implement...
   //=============================================================================
 
-  return H0*H0*(-(OmegaB + OmegaCDM)*exp(-x) -2*(OmegaR + OmegaNu)*exp(-2*x) + 2*OmegaLambda*exp(2*x))/(2*Hp_of_x(x));
+  return pow(H0, 2)/(2*Hp_of_x(x))*(-(OmegaB + OmegaCDM)*exp(-x) -2*(OmegaR + OmegaNu)*exp(-2*x) + 2*OmegaLambda*exp(2*x));
 }
 
 double BackgroundCosmology::ddHpddx_of_x(double x) const{
@@ -134,10 +134,8 @@ double BackgroundCosmology::ddHpddx_of_x(double x) const{
   //...
   //...
 
-  // Sjekk at denne ble riktig
-
-  return H0*H0*((OmegaB + OmegaCDM)*exp(-x) + 4*(OmegaR + OmegaNu)*exp(-2*x) + 2*OmegaLambda*exp(2*x))/(2*Hp_of_x(x))
-  - 0.5*pow(H0, 4)*pow((-(OmegaB + OmegaCDM)*exp(-x) -2*(OmegaR + OmegaNu)*exp(-2*x) + 2*OmegaLambda*exp(2*x)), 2)/(2*pow(Hp_of_x(x), 3));
+  return pow(H0,2)/(2*Hp_of_x(x))*((OmegaB + OmegaCDM)*exp(-x) + 4*(OmegaR + OmegaNu)*exp(-2*x) + 4*OmegaLambda*exp(2*x))
+  - pow(H0,4)/(4*pow(Hp_of_x(x),3))*pow(-(OmegaB + OmegaCDM)*exp(-x) - 2*(OmegaR + OmegaNu)*exp(-2*x) + 2*OmegaLambda*exp(2*x), 2);
 }
 
 double BackgroundCosmology::get_OmegaB(double x) const{ 
@@ -246,9 +244,9 @@ void BackgroundCosmology::info() const{
 // Output some data to file
 //====================================================
 void BackgroundCosmology::output(const std::string filename) const{
-  const double x_min = -10.0;
-  const double x_max =  0.0;
-  const int    n_pts =  100;
+  const double x_min = x_start;
+  const double x_max =  x_end;
+  const int    n_pts =  1000;
   
   Vector x_array = Utils::linspace(x_min, x_max, n_pts);
 
@@ -269,5 +267,6 @@ void BackgroundCosmology::output(const std::string filename) const{
   };
   std::for_each(x_array.begin(), x_array.end(), print_data);
   std::cout << "Age of Universe:" << t_of_x(0.0)/(365.2425*24*60*60) << std::endl;
+  std::cout << "eta_0:" << eta_of_x(0.0) << std::endl;
 }
 
