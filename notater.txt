@@ -1,0 +1,5 @@
+----- Notater til koding -----
+
+Hvilken løsning av andregradslikning?
+
+Får noen nan ut av beregningene. Er noe feil med Xe_of_x

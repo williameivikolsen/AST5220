@@ -34,9 +34,6 @@ int main(int argc, char **argv){
   // Output background evolution quantities
   cosmo.output("cosmology.txt");
 
-  // Remove when module is completed
-  return 0;
-
   //=========================================================================
   // Module II
   //=========================================================================
