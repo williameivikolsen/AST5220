@@ -186,6 +186,6 @@ plt.xscale('log')
 plt.xlabel(r'$a$')
 plt.ylabel(r'$d^2\tilde{g}/dx^2$')
 plt.tight_layout()
-plt.savefig('g.pdf')
+plt.savefig('ddgddx.pdf')
 
 plt.show()
