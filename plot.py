@@ -14,18 +14,18 @@ TCMB0        = 2.7255
 OmegaR0      = 5.50896e-05
 OmegaLambda0 = 0.682945
 
-data = np.loadtxt('cosmology.txt')
-x = data[:, 0]
-eta = data[:, 1]
-Hp = data[:, 2]
-dHpdx = data[:, 3]
-ddHpddx = data[:, 4]
-OmegaB = data[:, 5]
-OmegaCDM = data[:, 6]
-OmegaLambda = data[:, 7]
-OmegaR = data[:, 8]
-OmegaNu = data[:, 9]
-OmegaK = data[:, 10]
+data_background = np.loadtxt('cosmology.txt')
+x = data_background [:, 0]
+eta = data_background [:, 1]
+Hp = data_background [:, 2]
+dHpdx = data_background [:, 3]
+ddHpddx = data_background [:, 4]
+OmegaB = data_background [:, 5]
+OmegaCDM = data_background [:, 6]
+OmegaLambda = data_background [:, 7]
+OmegaR = data_background [:, 8]
+OmegaNu = data_background [:, 9]
+OmegaK = data_background [:, 10]
 H = Hp/np.exp(x)
 a = np.exp(x)
 c = 2.99792458e8
@@ -38,6 +38,19 @@ supernova = np.loadtxt('supernova.txt', skiprows=1)
 z_data = supernova[:, 0]
 dL_data = supernova[:, 1]
 error = supernova[:, 2]
+
+data_recombination = np.loadtxt('recombination.txt')
+x_recomb    = data_recombination[:, 0]
+Xe          = data_recombination[:, 1]
+log_ne      = data_recombination[:, 2]
+tau         = data_recombination[:, 3]
+dtaudx      = data_recombination[:, 4]
+ddtauddx    = data_recombination[:, 5]
+g           = data_recombination[:, 6]
+dgdx        = data_recombination[:, 7]
+ddgddx      = data_recombination[:, 8]
+
+a_recomb = np.exp(x_recomb)
 
 os.chdir('./Plots')
 
@@ -53,7 +66,7 @@ plt.axvline(x=a_r, ls='--', color='red', label=r'$a_\gamma$')
 plt.axvline(x=a_d, ls='--', color='magenta', label=r'$a_\Lambda$')
 plt.legend()
 plt.tight_layout()
-plt.savefig('omega.pdf')
+# plt.savefig('omega.pdf')
 
 plt.figure()
 plt.loglog(a, H*Mpc/(100*1000))
@@ -64,7 +77,7 @@ plt.axvline(x=a_r, ls='--', color='red', label=r'$a_\gamma$')
 plt.axvline(x=a_d, ls='--', color='magenta', label=r'$a_\Lambda$')
 plt.legend()
 plt.tight_layout()
-plt.savefig('H.pdf')
+# plt.savefig('H.pdf')
 
 plt.figure()
 plt.loglog(a, Hp*Mpc/(100*1000))
@@ -75,7 +88,7 @@ plt.axvline(x=a_r, ls='--', color='red', label=r'$a_\gamma$')
 plt.axvline(x=a_d, ls='--', color='magenta', label=r'$a_\Lambda$')
 plt.legend()
 plt.tight_layout()
-plt.savefig('Hp.pdf')
+# plt.savefig('Hp.pdf')
 
 plt.figure()
 plt.plot(a, dHpdx/Hp, label=r'$\frac{1}{\mathcal{H}}\frac{d\mathcal{H}}{dx}$')
@@ -87,7 +100,7 @@ plt.axvline(x=a_d, ls='--', color='magenta', label=r'$a_\Lambda$')
 plt.xscale('log')
 plt.tight_layout()
 plt.legend()
-plt.savefig('derivatives.pdf')
+# plt.savefig('derivatives.pdf')
 
 plt.figure()
 plt.loglog(a, eta/Mpc)
@@ -98,7 +111,7 @@ plt.axvline(x=a_r, ls='--', color='red', label=r'$a_\gamma$')
 plt.axvline(x=a_d, ls='--', color='magenta', label=r'$a_\Lambda$')
 plt.tight_layout()
 plt.legend()
-plt.savefig('eta.pdf')
+# plt.savefig('eta.pdf')
 
 plt.figure()
 plt.loglog(a, eta*Hp/c)
@@ -109,7 +122,7 @@ plt.axvline(x=a_r, ls='--', color='red', label=r'$a_\gamma$')
 plt.axvline(x=a_d, ls='--', color='magenta', label=r'$a_\Lambda$')
 plt.legend()
 plt.tight_layout()
-plt.savefig('etaHp_c.pdf')
+# plt.savefig('etaHp_c.pdf')
 
 eta0 = 4.39812e26
 chi = (eta0 - eta)/(Mpc*1e3)
@@ -126,5 +139,53 @@ plt.xlabel(r'$z$')
 plt.ylabel(r'$d_L$' + ' [Gpc]')
 plt.legend()
 plt.tight_layout()
-plt.savefig('luminosity_distance.pdf')
+# plt.savefig('luminosity_distance.pdf')
+
+plt.figure()
+plt.loglog(a_recomb, Xe)
+plt.xlabel(r'$a$')
+plt.ylabel(r'$X_e$')
+plt.tight_layout()
+plt.savefig('Xe.pdf')
+
+plt.figure()
+plt.loglog(a_recomb, np.exp(log_ne))
+plt.xlabel(r'$a$')
+plt.ylabel(r'$n_e$')
+plt.tight_layout()
+plt.savefig('n_e.pdf')
+
+plt.figure()
+plt.loglog(a_recomb, tau, label=r'$\tau$')
+plt.loglog(a_recomb, -dtaudx, label=r'$-d\tau/dx$')
+plt.loglog(a_recomb, ddtauddx, label=r'$d^2\tau/dx^2$')
+plt.xlabel(r'$a$')
+plt.tight_layout()
+plt.legend()
+plt.savefig('tau.pdf')
+
+plt.figure()
+plt.plot(a_recomb, g)
+plt.xscale('log')
+plt.xlabel(r'$a$')
+plt.ylabel(r'$\tilde{g}$')
+plt.tight_layout()
+plt.savefig('g.pdf')
+
+plt.figure()
+plt.plot(a_recomb, dgdx)
+plt.xscale('log')
+plt.xlabel(r'$a$')
+plt.ylabel(r'$d\tilde{g}/dx$')
+plt.tight_layout()
+plt.savefig('dgdx.pdf')
+
+plt.figure()
+plt.plot(a_recomb, ddgddx)
+plt.xscale('log')
+plt.xlabel(r'$a$')
+plt.ylabel(r'$d^2\tilde{g}/dx^2$')
+plt.tight_layout()
+plt.savefig('g.pdf')
+
 plt.show()
