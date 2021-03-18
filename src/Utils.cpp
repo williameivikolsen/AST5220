@@ -45,7 +45,7 @@ namespace Utils{
 
   // Find a value in a spline
   double binary_search_for_value(
-      Spline &y, 
+      const Spline &y, 
       double y_value, 
       std::pair<double,double> xrange, 
       double epsilon){

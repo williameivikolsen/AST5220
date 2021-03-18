@@ -1,11 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import os
-import seaborn as sns
+# import seaborn as sns
 
 plt.rcParams.update({'font.size': 14})
-plt.style.use('seaborn')
-sns.set(font_scale=1.3)
+# plt.style.use('seaborn')
+# sns.set(font_scale=1.3)
 
 h            = 0.67
 OmegaB0      = 0.05
@@ -51,6 +51,8 @@ dgdx        = data_recombination[:, 7]
 ddgddx      = data_recombination[:, 8]
 
 a_recomb = np.exp(x_recomb)
+z_recomb = 1/a_recomb - 1
+z_decoup = 1081.3
 
 os.chdir('./Plots')
 
@@ -139,53 +141,60 @@ plt.xlabel(r'$z$')
 plt.ylabel(r'$d_L$' + ' [Gpc]')
 plt.legend()
 plt.tight_layout()
+plt.gca().invert_xaxis()
 # plt.savefig('luminosity_distance.pdf')
 
 plt.figure()
-plt.loglog(a_recomb, Xe)
-plt.xlabel(r'$a$')
+plt.loglog(z_recomb, Xe)
+plt.xlabel(r'$z$')
 plt.ylabel(r'$X_e$')
 plt.tight_layout()
-plt.savefig('Xe.pdf')
+plt.gca().invert_xaxis()
+# plt.savefig('Xe.pdf')
 
 plt.figure()
-plt.loglog(a_recomb, np.exp(log_ne))
-plt.xlabel(r'$a$')
+plt.loglog(z_recomb, np.exp(log_ne))
+plt.xlabel(r'$z$')
 plt.ylabel(r'$n_e$')
 plt.tight_layout()
-plt.savefig('n_e.pdf')
+plt.gca().invert_xaxis()
+# plt.savefig('n_e.pdf')
 
 plt.figure()
-plt.loglog(a_recomb, tau, label=r'$\tau$')
-plt.loglog(a_recomb, -dtaudx, label=r'$-d\tau/dx$')
-plt.loglog(a_recomb, ddtauddx, label=r'$d^2\tau/dx^2$')
-plt.xlabel(r'$a$')
+plt.loglog(z_recomb, tau, label=r'$\tau$')
+plt.loglog(z_recomb, -dtaudx, label=r'$-d\tau/dx$')
+plt.loglog(z_recomb, ddtauddx, label=r'$d^2\tau/dx^2$')
+plt.xlabel(r'$z$')
 plt.tight_layout()
 plt.legend()
-plt.savefig('tau.pdf')
+plt.gca().invert_xaxis()
+# plt.savefig('tau.pdf')
 
 plt.figure()
-plt.plot(a_recomb, g)
+plt.plot(z_recomb, g)
 plt.xscale('log')
-plt.xlabel(r'$a$')
+plt.xlabel(r'$z$')
 plt.ylabel(r'$\tilde{g}$')
 plt.tight_layout()
-plt.savefig('g.pdf')
+plt.gca().invert_xaxis()
+# plt.savefig('g.pdf')
 
 plt.figure()
-plt.plot(a_recomb, dgdx)
+plt.plot(z_recomb, dgdx)
 plt.xscale('log')
-plt.xlabel(r'$a$')
+plt.xlabel(r'$z$')
 plt.ylabel(r'$d\tilde{g}/dx$')
 plt.tight_layout()
-plt.savefig('dgdx.pdf')
+plt.gca().invert_xaxis()
+# plt.savefig('dgdx.pdf')
 
 plt.figure()
-plt.plot(a_recomb, ddgddx)
+plt.plot(z_recomb, ddgddx)
 plt.xscale('log')
-plt.xlabel(r'$a$')
+plt.xlabel(r'$z$')
 plt.ylabel(r'$d^2\tilde{g}/dx^2$')
 plt.tight_layout()
-plt.savefig('ddgddx.pdf')
+plt.gca().invert_xaxis()
+# plt.savefig('ddgddx.pdf')
 
 plt.show()

@@ -426,5 +426,12 @@ void RecombinationHistory::output(const std::string filename) const{
     fp << "\n";
   };
   std::for_each(x_array.begin(), x_array.end(), print_data);
+  // double x_decoupling = Utils::binary_search_for_value(const_cast<Spline&>(tau_of_x_spline), 1);
+  double x_decoupling = Utils::binary_search_for_value(tau_of_x_spline, 1);
+  double a_decoupling = exp(x_decoupling);
+  double z_decoupling = 1/a_decoupling - 1;
+  std::cout << "Time of decoupling: x = " << x_decoupling << std::endl;
+  std::cout << "a = " << a_decoupling << std::endl;
+  std::cout << "z = " << z_decoupling << std::endl;
 }
 
