@@ -433,5 +433,23 @@ void RecombinationHistory::output(const std::string filename) const{
   std::cout << "Time of decoupling: x = " << x_decoupling << std::endl;
   std::cout << "a = " << a_decoupling << std::endl;
   std::cout << "z = " << z_decoupling << std::endl;
+  double x_rec = Utils::binary_search_for_value(log_Xe_of_x_spline, log(0.5));
+  double a_rec = exp(x_rec);
+  double z_rec = 1/a_rec - 1;
+  std::cout << "Halfway in recombination: x = " << x_rec << std::endl;
+  std::cout << "a = " << a_rec << std::endl;
+  std::cout << "z = " << z_rec << std::endl;
+  Vector Xe_saha(npts);
+  for(int i = 0; i < npts; i++){
+    Xe_saha[i] = electron_fraction_from_saha_equation(x_array[i]).first;
+  }
+  Spline Xe_saha_spline;
+  Xe_saha_spline.create(x_array, Xe_saha, "Xe_saha");
+  double x_saha = Utils::binary_search_for_value(Xe_saha_spline, 0.5);
+  double a_saha = exp(x_saha);
+  double z_saha = 1/a_saha - 1;
+  std::cout << "Expected halfway by Saha: x = " << x_saha << std::endl;
+  std::cout << "a = " << a_saha << std::endl;
+  std::cout << "z = " << z_saha << std::endl;
+  std::cout << "Freeze-out abundance of electrons: Xe = " << Xe_of_x(0) << std::endl;
 }
-

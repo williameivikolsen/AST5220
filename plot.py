@@ -186,4 +186,13 @@ plt.tight_layout()
 plt.gca().invert_xaxis()
 # plt.savefig('g.pdf')
 
+k_B = 1.38064852e-23        # J/K
+eV  = 1.60217653e-19        # J
+a_decoup = 1/(1+z_decoup)
+T_decoup = TCMB0/a_decoup
+E_decoup = T_decoup*k_B     # J
+E_decoup = E_decoup/eV
+print("Temperatur ved decoupling: T = %g K" % T_decoup)
+print("Energi ved decoupling:     E = %g eV" % E_decoup)
+
 plt.show()
