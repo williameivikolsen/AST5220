@@ -23,7 +23,7 @@ BackgroundCosmology::BackgroundCosmology(
   // TODO: Compute OmegaR, OmegaNu, OmegaK, H0, ...
   //=============================================================================
   H0 = Constants.H0_over_h*h;
-  OmegaNu = Neff*7/8*pow(4/11, 4/3);
+  OmegaNu = Neff*7/8*pow(4.0/11.0, 4.0/3.0);
   OmegaR = 2*pow(M_PI,2)/30*pow(Constants.k_b*TCMB, 4)/(pow(Constants.hbar,3)*pow(Constants.c, 5))*8*M_PI*Constants.G/(3*pow(H0, 2));
   OmegaLambda = 1 - OmegaB - OmegaCDM - OmegaR - OmegaNu - OmegaK;
 }
