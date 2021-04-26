@@ -42,7 +42,7 @@ void Perturbations::integrate_perturbations(){
   double Omega_R = cosmo->get_OmegaR();
   double c       = Constants.c;
 
-  Vector k_array = Utils::linspace(k_min, k_max, n_k);                               // LOGARITMISK!!!
+  Vector k_array = exp(Utils::linspace(log(k_min), log(k_max), n_k));
   Vector x_full  = Utils::linspace(x_start, x_end, n_x);
   Vector delta_cdm(n_x * n_k);
   Vector delta_b(n_x * n_k);
@@ -318,7 +318,7 @@ Vector Perturbations::set_ic_after_tight_coupling(
   // SET: Photon temperature perturbations (Theta_ell)
   Theta[0]        = Theta_tc[0];
   Theta[1]        = Theta_tc[1];
-  Theta[2]        = -4.0*c*k/(9*Hp*dtaudx)*Theta[1];
+  Theta[2]        = -4.0*c*k/(9.0*Hp*dtaudx)*Theta[1];
   for(int ell = 2; ell < n_ell_theta; ell++){
     Theta[ell] = -ell/(2*ell+1)*c*k/(Hp*dtaudx)*Theta[ell-1];
   }
@@ -345,7 +345,7 @@ Vector Perturbations::set_ic_after_tight_coupling(
 int Perturbations::get_tight_coupling_time(const double k) const{
   // Merk: Jeg har endret funksjonen til å returnere indeks istedenfor x-verdi
   int idx_tight_coupling_end;
-
+  double x_rec = -7.6;        // Time of recombination
   //=============================================================================
   // TODO: compute and return x for when tight coupling ends
   // Remember all the three conditions in Callin
@@ -361,6 +361,10 @@ int Perturbations::get_tight_coupling_time(const double k) const{
       max = c*k/Hp;
     }
     if(abs(dtaudx) < 10.0*max){
+      idx_tight_coupling_end = i;
+      break;
+    }
+    if(x > x_rec){
       idx_tight_coupling_end = i;
       break;
     }
@@ -488,18 +492,18 @@ int Perturbations::rhs_tight_coupling_ode(double x, double k, const double *y, d
   //=============================================================================
   // TODO: fill in the expressions for all the derivatives
   //=============================================================================
-  double Theta2 = -8.0/15.0*c*k/(Hp*dtaudx)*Theta[1];
+  double Theta2 = -4.0/9.0*c*k/(Hp*dtaudx)*Theta[1];
   double Psi    = -Phi - 12.0*pow(H0/(c*k*exp(x)),2)*Omega_R*Theta2;
-  double R      = 4*Omega_R/(3*Omega_B*exp(x));
+  double R      = 4.0*Omega_R/(3.0*Omega_B*exp(x));
 
   // SET: Scalar quantities (Phi, delta, v, ...)
-  dPhidx        = Psi - pow(c*k/Hp,2)/3.0*Phi + 0.5*pow(H0/Hp,2)*(Omega_CDM*exp(-x)*delta_cdm + Omega_B*exp(-x)*delta_b + 4*Omega_R*exp(-2*x)*Theta[0]);
-  ddelta_cdmdx  = c*k/Hp*v_cdm - 3*dPhidx;
+  dPhidx        = Psi - pow(c*k/Hp,2)/3.0*Phi + 0.5*pow(H0/Hp,2)*(Omega_CDM*exp(-x)*delta_cdm + Omega_B*exp(-x)*delta_b + 4*Omega_R*exp(-2.0*x)*Theta[0]);
+  ddelta_cdmdx  = c*k/Hp*v_cdm - 3.0*dPhidx;
   dv_cdmdx      = -v_cdm - c*k/Hp*Psi;
-  ddelta_bdx    = c*k/Hp*v_b - 3*dPhidx;
+  ddelta_bdx    = c*k/Hp*v_b - 3.0*dPhidx;
   dThetadx[0]   = -c*k/Hp*Theta[1] - dPhidx;
-  double q      = ((-((1-R))*dtaudx + (1-R)*ddtauddx)*(3*Theta[1] + v_b) - c*k/Hp*Psi + (1 - dHpdx/Hp)*c*k/Hp*(-Theta[0] + 2*Theta2) - c*k/Hp*dThetadx[0])/((1+R)*dtaudx + dHpdx/Hp - 1);
-  dv_bdx        = 1/(1+R)*(-v_b - c*k/Hp*Psi + R*(q + c*k/Hp*(-Theta[0] + 2*Theta2) - c*k/Hp*Psi));
+  double q      = ((-((1.0-R))*dtaudx + (1.0+R)*ddtauddx)*(3.0*Theta[1] + v_b) - c*k/Hp*Psi + (1.0 - dHpdx/Hp)*c*k/Hp*(-Theta[0] + 2.0*Theta2) - c*k/Hp*dThetadx[0])/((1.0+R)*dtaudx + dHpdx/Hp - 1.0);
+  dv_bdx        = 1.0/(1.0+R)*(-v_b - c*k/Hp*Psi + R*(q + c*k/Hp*(-Theta[0] + 2.0*Theta2) - c*k/Hp*Psi));
   dThetadx[1]   = 1.0/3.0*(q - dv_bdx);
 
   // SET: Neutrino mutlipoles (Nu_ell)
@@ -569,8 +573,8 @@ int Perturbations::rhs_full_ode(double x, double k, const double *y, double *dyd
 
   // SET: Scalar quantities (Phi, delta, v, ...)
   double Psi    = -Phi - 12.0*pow(H0/(c*k*exp(x)),2)*Omega_R*Theta[2];
-  double R      = 4*Omega_R/(3*Omega_B*exp(x));
-  dPhidx        = Psi - pow(c*k/Hp,2)/3.0*Phi + 0.5*pow(H0/Hp,2)*(Omega_CDM*exp(-x)*delta_cdm + Omega_B*exp(-x)*delta_b + 4.0*Omega_R*exp(-2*x)*Theta[0]);
+  double R      = 4.0*Omega_R/(3.0*Omega_B*exp(x));
+  dPhidx        = Psi - pow(c*k/Hp,2)/3.0*Phi + 0.5*pow(H0/Hp,2)*(Omega_CDM*exp(-x)*delta_cdm + Omega_B*exp(-x)*delta_b + 4.0*Omega_R*exp(-2.0*x)*Theta[0]);
   ddelta_cdmdx  = c*k/Hp*v_cdm - 3.0*dPhidx;
   dv_cdmdx      = -v_cdm - c*k/Hp*Psi;
   ddelta_bdx    = c*k/Hp*v_b - 3.0*dPhidx;
@@ -579,14 +583,14 @@ int Perturbations::rhs_full_ode(double x, double k, const double *y, double *dyd
   // SET: Photon multipoles (Theta_ell)
   dThetadx[0] = -c*k/Hp*Theta[1] - dPhidx;
   dThetadx[1] = c*k/(3.0*Hp)*Theta[0] - 2.0*c*k/(3.0*Hp)*Theta[2] + c*k/(3.0*Hp)*Psi + dtaudx*(Theta[1] + v_b/3.0);
-  for(int ell = 2; ell < n_ell_theta-1; ell++){ // Sjekk grensen her!
-    dThetadx[ell] = ell*c*k/((2*ell+1)*Hp)*Theta[ell-1] - (ell+1)*c*k/((2*ell+1)*Hp)*Theta[ell+1] + dtaudx*Theta[ell]; // Sjekk formel: Er det en kronecker delta her?
+  for(int ell = 2; ell < n_ell_theta - 1; ell++){
+    dThetadx[ell] = ell*c*k/((2.0*ell+1.0)*Hp)*Theta[ell-1] - (ell+1.0)*c*k/((2.0*ell+1.0)*Hp)*Theta[ell+1] + dtaudx*Theta[ell];
     if(ell == 2){
       dThetadx[ell] = dThetadx[ell] - dtaudx*0.1*Theta[2];
     }
   }
   int ellmax       = n_ell_theta - 1;
-  dThetadx[ellmax] = c*k/Hp*Theta[ellmax] - c*(ellmax+1.0)/(Hp*eta)*Theta[ellmax] + dtaudx*Theta[ellmax];
+  dThetadx[ellmax] = c*k/Hp*Theta[ellmax-1] - c*(ellmax+1.0)/(Hp*eta)*Theta[ellmax] + dtaudx*Theta[ellmax];
 
   // SET: Photon polarization multipoles (Theta_p_ell)
   if(polarization){
