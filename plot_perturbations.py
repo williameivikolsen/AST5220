@@ -1,11 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import os
-import seaborn as sns
+# import seaborn as sns
 
 plt.rcParams.update({'font.size': 14})
-plt.style.use('seaborn')
-sns.set(font_scale=1.3)
+# plt.style.use('seaborn')
+# sns.set(font_scale=1.3)
 
 OmegaB0      = 0.05
 OmegaCDM0    = 0.267
@@ -98,6 +98,8 @@ plt.figure(4)
 plt.savefig('phi.pdf')
 plt.figure(6)
 plt.savefig('delta.pdf')
+plt.figure(7)
+plt.savefig('v.pdf')
 
 plt.figure(8)
 plt.title(r'$\Theta_0 + \Psi$')
