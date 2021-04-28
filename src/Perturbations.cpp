@@ -502,7 +502,7 @@ int Perturbations::rhs_tight_coupling_ode(double x, double k, const double *y, d
   dv_cdmdx      = -v_cdm - c*k/Hp*Psi;
   ddelta_bdx    = c*k/Hp*v_b - 3.0*dPhidx;
   dThetadx[0]   = -c*k/Hp*Theta[1] - dPhidx;
-  double q      = ((-((1.0-R))*dtaudx + (1.0+R)*ddtauddx)*(3.0*Theta[1] + v_b) - c*k/Hp*Psi + (1.0 - dHpdx/Hp)*c*k/Hp*(-Theta[0] + 2.0*Theta2) - c*k/Hp*dThetadx[0])/((1.0+R)*dtaudx + dHpdx/Hp - 1.0);
+  double q      = (-((1.0-R)*dtaudx + (1.0+R)*ddtauddx)*(3.0*Theta[1] + v_b) - c*k/Hp*Psi + (1.0 - dHpdx/Hp)*c*k/Hp*(-Theta[0] + 2.0*Theta2) - c*k/Hp*dThetadx[0])/((1.0+R)*dtaudx + dHpdx/Hp - 1.0);
   dv_bdx        = 1.0/(1.0+R)*(-v_b - c*k/Hp*Psi + R*(q + c*k/Hp*(-Theta[0] + 2.0*Theta2) - c*k/Hp*Psi));
   dThetadx[1]   = 1.0/3.0*(q - dv_bdx);
 
@@ -722,7 +722,10 @@ void Perturbations::output(const double k, const std::string filename) const{
     fp << get_Theta(x,k,2)   << " ";
     fp << get_Phi(x,k)       << " ";
     fp << get_Psi(x,k)       << " ";
-    // fp << get_Pi(x,k)        << " ";
+    fp << get_delta_b(x,k)   << " ";
+    fp << get_delta_cdm(x,k) << " ";
+    fp << get_v_b(x,k)       << " ";
+    fp << get_v_cdm(x,k)     << " ";
     fp << get_Source_T(x,k)  << " ";
     fp << get_Source_T(x,k) * Utils::j_ell(5,   arg)           << " ";
     fp << get_Source_T(x,k) * Utils::j_ell(50,  arg)           << " ";
