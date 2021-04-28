@@ -1,11 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import os
-# import seaborn as sns
+import seaborn as sns
 
 plt.rcParams.update({'font.size': 14})
-# plt.style.use('seaborn')
-# sns.set(font_scale=1.3)
+plt.style.use('seaborn')
+sns.set(font_scale=1.3)
 
 OmegaB0      = 0.05
 OmegaCDM0    = 0.267
@@ -40,6 +40,7 @@ for k in kvals:
     plt.legend()
     plt.xlabel(r'$z$')
     plt.gca().invert_xaxis()
+    plt.tight_layout()
 
     plt.figure(2)
     plt.title(r'$v_\gamma$')
@@ -48,6 +49,7 @@ for k in kvals:
     plt.legend()
     plt.xlabel(r'$z$')
     plt.gca().invert_xaxis()
+    plt.tight_layout()
 
     plt.figure(3)
     plt.title(r'$\Theta_2$')
@@ -56,6 +58,7 @@ for k in kvals:
     plt.legend()
     plt.xlabel(r'$z$')
     plt.gca().invert_xaxis()
+    plt.tight_layout()
 
     plt.figure(4)
     plt.title(r'$\Phi$')
@@ -64,6 +67,7 @@ for k in kvals:
     plt.legend()
     plt.xlabel(r'$z$')
     plt.gca().invert_xaxis()
+    plt.tight_layout()
 
     plt.figure(5)
     plt.title(r'$\Psi$')
@@ -72,6 +76,7 @@ for k in kvals:
     plt.legend()
     plt.xlabel(r'$z$')
     plt.gca().invert_xaxis()
+    plt.tight_layout()
 
     plt.figure(6)
     plt.title(r'$\delta_b, \delta_{CDM}$')
@@ -80,6 +85,7 @@ for k in kvals:
     plt.legend()
     plt.xlabel(r'$z$')
     plt.gca().invert_xaxis()
+    plt.tight_layout()
 
     plt.figure(7)
     plt.title(r'$v_b, v_{CDM}$')
@@ -88,6 +94,7 @@ for k in kvals:
     plt.legend()
     plt.xlabel(r'$z$')
     plt.gca().invert_xaxis()
+    plt.tight_layout()
 
 os.chdir('./Plots')
 plt.figure(1)
@@ -107,5 +114,6 @@ plt.plot(z, theta0 - phi)
 plt.xlabel(r'$z$')
 plt.xscale('log')
 plt.gca().invert_xaxis()
+plt.tight_layout()
 
 plt.show()
