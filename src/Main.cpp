@@ -63,9 +63,6 @@ int main(int argc, char **argv){
   kvalue = 0.001 / Constants.Mpc;
   pert.output(kvalue, "perturbations_k0.001.txt");
   
-  // Remove when module is completed
-  return 0;
-  
   //=========================================================================
   // Module IV
   //=========================================================================
@@ -73,9 +70,6 @@ int main(int argc, char **argv){
   PowerSpectrum power(&cosmo, &rec, &pert);
   power.solve();
   power.output("cells.txt");
-  
-  // Remove when module is completed
-  return 0;
 
   Utils::EndTiming("Everything");
 }

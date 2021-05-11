@@ -383,7 +383,7 @@ void Perturbations::compute_source_functions(){
   //=============================================================================
   // TODO: Make the x and k arrays to evaluate over and use to make the splines
   //=============================================================================
-  Vector k_array = Utils::linspace(k_min, k_max, n_k);
+  Vector k_array = exp(Utils::linspace(log(k_min), log(k_max), n_k));
   Vector x_array = Utils::linspace(x_start, x_end, n_x);
 
   // Make storage for the source functions (in 1D array to be able to pass it to the spline)

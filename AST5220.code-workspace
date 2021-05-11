@@ -5,6 +5,9 @@
 		},
 		{
 			"path": "../FYS4150"
+		},
+		{
+			"path": "../FYS4160"
 		}
 	],
 	"settings": {
@@ -76,7 +79,8 @@
 			"utility": "cpp",
 			"vector": "cpp",
 			"numeric": "cpp",
-			"random": "cpp"
+			"random": "cpp",
+			"clocale": "cpp"
 		}
 	}
 }

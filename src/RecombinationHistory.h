@@ -82,6 +82,7 @@ class RecombinationHistory{
     double Xe_of_x(double x) const;
     double log_ne_of_x(double x) const;
     double get_Yp() const;
+    double get_x_dec() const;
 };
 
 #endif
