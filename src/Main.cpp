@@ -70,6 +70,7 @@ int main(int argc, char **argv){
   PowerSpectrum power(&cosmo, &rec, &pert);
   power.solve();
   power.output("cells.txt");
+  power.output_theta_ell("theta.txt");
 
   Utils::EndTiming("Everything");
 }

@@ -421,11 +421,12 @@ void Perturbations::compute_source_functions(){
       double ddv_bddx       = v_b_spline.deriv_xx(x,k);
 
       // Temperature source
-      ST_array[index] = g*(Theta0 + Psi_spline(x,k) + 0.25*Theta2) + exp(-tau)*(dPsidx - dPhidx)
-                      - 1.0/(c*k)*(dHpdx*g*v_b + Hp*dgdx*v_b + Hp*g*dv_bdx) + 3.0/(4.0*pow(c*k,2))*(
-                        pow(dHpdx,2)*g*v_b + Hp*ddHpddx*g*v_b + Hp*dHpdx*dgdx*v_b + Hp*dHpdx*g*dv_bdx
-                        + 2*dHpdx*Hp*dgdx*v_b + pow(Hp,2)*ddgddx*v_b + pow(Hp,2)*dgdx*dv_bdx
-                        + 2*dHpdx*Hp*g*dv_bdx + pow(Hp,2)*dgdx*dv_bdx + pow(Hp,2)*g*ddv_bddx);
+      // ST_array[index] = g*(Theta0 + Psi_spline(x,k) + 0.25*Theta2) + exp(-tau)*(dPsidx - dPhidx)
+      //                 - 1.0/(c*k)*(dHpdx*g*v_b + Hp*dgdx*v_b + Hp*g*dv_bdx) + 3.0/(4.0*pow(c*k,2))*(
+      //                   pow(dHpdx,2)*g*v_b + Hp*ddHpddx*g*v_b + Hp*dHpdx*dgdx*v_b + Hp*dHpdx*g*dv_bdx
+      //                   + 2*dHpdx*Hp*dgdx*v_b + pow(Hp,2)*ddgddx*v_b + pow(Hp,2)*dgdx*dv_bdx
+      //                   + 2*dHpdx*Hp*g*dv_bdx + pow(Hp,2)*dgdx*dv_bdx + pow(Hp,2)*g*ddv_bddx);
+      ST_array[index] = 1.0;
 
       // Polarization source
       if(Constants.polarization){
