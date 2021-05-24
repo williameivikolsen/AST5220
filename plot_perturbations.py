@@ -1,11 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import os
-import seaborn as sns
+# import seaborn as sns
 
-plt.rcParams.update({'font.size': 14})
-plt.style.use('seaborn')
-sns.set(font_scale=1.3)
+# plt.rcParams.update({'font.size': 14})
+# plt.style.use('seaborn')
+# sns.set(font_scale=1.3)
 
 OmegaB0      = 0.05
 OmegaCDM0    = 0.267
@@ -91,6 +91,14 @@ for k in kvals:
     plt.title(r'$v_b, v_{CDM}$')
     plt.loglog(z, v_cdm, label=r'$k = $' + k + '/Mpc', color=col[k])
     plt.loglog(z, np.abs(v_b), ls='--', color=col[k])
+    plt.legend()
+    plt.xlabel(r'$z$')
+    plt.gca().invert_xaxis()
+    plt.tight_layout()
+
+    plt.figure(8)
+    plt.title(r'$\Psi$')
+    plt.loglog(z, psi, label=r'$k = $' + k + '/Mpc', color=col[k])
     plt.legend()
     plt.xlabel(r'$z$')
     plt.gca().invert_xaxis()

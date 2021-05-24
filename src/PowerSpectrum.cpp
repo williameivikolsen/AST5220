@@ -69,7 +69,7 @@ void PowerSpectrum::generate_bessel_function_splines(){
   // might break down. Use j_ell(z) = Utils::j_ell(ell, z)
   //=============================================================================
   double xmax  = k_max*cosmo->eta_of_x(0);
-  int N        = xmax/(2*M_PI/16.0);
+  int N        = xmax/(2.0*M_PI/16.0);
   Vector x     = Utils::linspace(0, xmax, N);
   Vector j_ell(N);
 
@@ -99,11 +99,13 @@ Vector2D PowerSpectrum::line_of_sight_integration_single(
   // Make storage for the results
   Vector2D result = Vector2D(ells.size(), Vector(k_array.size()));
 
-  double F_ell = 0;
-  double dx    = 2.0*M_PI/40.0;
+  double F_ell = 0.0;
+  double dx    = 2.0*M_PI/2000.0;
   // double xmin  = 0.9*rec->get_x_dec();  // Start integration just before decoupling
-  double xmin = -14.0;
-  double x     = xmin;
+  double xmin  = Constants.x_start;
+  double xmax  = 0.0;
+  int N        = (xmax - xmin)/dx;
+  Vector x     = Utils::linspace(xmin, xmax, N);
   double eta0  = cosmo->eta_of_x(0);
   for(size_t ik = 0; ik < k_array.size(); ik++){
 
@@ -113,19 +115,16 @@ Vector2D PowerSpectrum::line_of_sight_integration_single(
     // given value of k
     //=============================================================================
     double k = k_array[ik];
-    for(size_t i = 0; i < ells.size(); i++){
+    for(size_t iell = 0; iell < ells.size(); iell++){
       // Trapezoidal rule:
-      F_ell = 0.5*pert->get_Source_T(x, k)*j_ell_splines[i](k*(eta0 - cosmo->eta_of_x(x)));
-      x = x + dx;
-      while(x < 0.0 - dx){
-        F_ell = F_ell + pert->get_Source_T(x, k)*j_ell_splines[i](k*(eta0 - cosmo->eta_of_x(x)));
-        x = x + dx;
+      F_ell = 0.5*pert->get_Source_T(x[0], k)*j_ell_splines[iell](k*(eta0 - cosmo->eta_of_x(x[0])));
+      for(int ix = 0; ix < N-1; ix++){
+        F_ell = F_ell + pert->get_Source_T(x[ix], k)*j_ell_splines[iell](k*(eta0 - cosmo->eta_of_x(x[ix])));
       }
-      F_ell = F_ell + 0.5*pert->get_Source_T(x, k)*j_ell_splines[i](k*(eta0 - cosmo->eta_of_x(x)));
+      F_ell = F_ell + 0.5*pert->get_Source_T(x[N-1], k)*j_ell_splines[iell](k*(eta0 - cosmo->eta_of_x(x[N-1])));
       F_ell = F_ell*dx;
-      result[i][ik] = F_ell;
+      result[iell][ik] = F_ell;
       F_ell = 0.0;
-      x     = xmin;
     }
   }
 
@@ -196,15 +195,15 @@ Vector PowerSpectrum::solve_for_cell(
   Vector cell(nells);
   // Integration with trapezoidal rule:
   for(int i = 0; i < nells; i++){
-    cell[i] = 0.5*primordial_power_spectrum(k[0])*pow(thetaT_ell_of_k_spline[i](k[0]),2)/k[0];
-    // cell[i] = 0.5*pow(j_ell_splines[i](k[0]*eta0),2)/k[0];
+    // cell[i] = 0.5*primordial_power_spectrum(k[0])*pow(thetaT_ell_of_k_spline[i](k[0]),2)/k[0];
+    cell[i] = 0.5*primordial_power_spectrum(k[0])*f_ell_spline[i](k[0])*g_ell_spline[i](k[0])/k[0];
     for(int j = 0; j < N-1; j++){
-      cell[i] = cell[i] + primordial_power_spectrum(k[j])*pow(thetaT_ell_of_k_spline[i](k[j]),2)/k[j];
-      // cell[i] = cell[i] + pow(j_ell_splines[i](k[j]*eta0),2)/k[j];
+      // cell[i] = cell[i] + primordial_power_spectrum(k[j])*pow(thetaT_ell_of_k_spline[i](k[j]),2)/k[j];
+      cell[i] = cell[i] + primordial_power_spectrum(k[j])*f_ell_spline[i](k[j])*g_ell_spline[i](k[j])/k[j];
     }
-    cell[i] = cell[i] + 0.5*primordial_power_spectrum(k[N-1])*pow(thetaT_ell_of_k_spline[i](k[N-1]),2)/k[N-1];
-    // cell[i] = cell[i] + pow(j_ell_splines[i](k[N-1]*eta0),2)/k[N-1];
-    cell[i] = dk*cell[i];
+    // cell[i] = cell[i] + 0.5*primordial_power_spectrum(k[N-1])*pow(thetaT_ell_of_k_spline[i](k[N-1]),2)/k[N-1];
+    cell[i] = cell[i] + primordial_power_spectrum(k[N-1])*f_ell_spline[i](k[N-1])*g_ell_spline[i](k[N-1])/k[N-1];
+    cell[i] = 4*M_PI*dk*cell[i];
   }
 
   return cell;

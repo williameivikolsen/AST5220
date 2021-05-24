@@ -319,7 +319,7 @@ Vector Perturbations::set_ic_after_tight_coupling(
   Theta[0]        = Theta_tc[0];
   Theta[1]        = Theta_tc[1];
   Theta[2]        = -4.0*c*k/(9.0*Hp*dtaudx)*Theta[1];
-  for(int ell = 2; ell < n_ell_theta; ell++){
+  for(int ell = 3; ell < n_ell_theta; ell++){
     Theta[ell] = -ell/(2*ell+1)*c*k/(Hp*dtaudx)*Theta[ell-1];
   }
 
@@ -410,6 +410,8 @@ void Perturbations::compute_source_functions(){
       const double c        = Constants.c;
       double Theta0         = Theta_spline[0](x,k);
       double Theta2         = Theta_spline[2](x,k);
+      double dT2dx          = Theta_spline[2].deriv_x(x,k);
+      double ddT2ddx        = Theta_spline[2].deriv_xx(x,k);
       double dPsidx         = Psi_spline.deriv_x(x,k);
       double dPhidx         = Phi_spline.deriv_x(x,k);
       double dHpdx          = cosmo->dHpdx_of_x(x);
@@ -421,12 +423,11 @@ void Perturbations::compute_source_functions(){
       double ddv_bddx       = v_b_spline.deriv_xx(x,k);
 
       // Temperature source
-      // ST_array[index] = g*(Theta0 + Psi_spline(x,k) + 0.25*Theta2) + exp(-tau)*(dPsidx - dPhidx)
-      //                 - 1.0/(c*k)*(dHpdx*g*v_b + Hp*dgdx*v_b + Hp*g*dv_bdx) + 3.0/(4.0*pow(c*k,2))*(
-      //                   pow(dHpdx,2)*g*v_b + Hp*ddHpddx*g*v_b + Hp*dHpdx*dgdx*v_b + Hp*dHpdx*g*dv_bdx
-      //                   + 2*dHpdx*Hp*dgdx*v_b + pow(Hp,2)*ddgddx*v_b + pow(Hp,2)*dgdx*dv_bdx
-      //                   + 2*dHpdx*Hp*g*dv_bdx + pow(Hp,2)*dgdx*dv_bdx + pow(Hp,2)*g*ddv_bddx);
-      ST_array[index] = 1.0;
+      ST_array[index] = g*(Theta0 + Psi_spline(x,k) + 0.25*Theta2) + exp(-tau)*(dPsidx - dPhidx)
+                      - 1.0/(c*k)*(dHpdx*g*v_b + Hp*dgdx*v_b + Hp*g*dv_bdx) + 3.0/(4.0*pow(c*k,2))*Hp*(pow(dHpdx,2)*g*Theta2/Hp + dHpdx*dgdx*Theta2 + dHpdx*g*dT2dx
+                        + ddHpddx*g*Theta2 + dHpdx*dgdx*Theta2 + dHpdx*g*dT2dx
+                        + dHpdx*dgdx*Theta2 + Hp*ddgddx*Theta2 + Hp*dgdx*dT2dx
+                        + dHpdx*g*dT2dx + Hp*dgdx*dT2dx + Hp*g*ddT2ddx);
 
       // Polarization source
       if(Constants.polarization){
