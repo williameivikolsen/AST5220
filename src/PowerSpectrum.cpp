@@ -221,16 +221,19 @@ double PowerSpectrum::primordial_power_spectrum(const double k) const{
 // P(k) in units of (Mpc)^3
 //====================================================
 
-double PowerSpectrum::get_matter_power_spectrum(const double x, const double k_mpc) const{
+double PowerSpectrum::get_matter_power_spectrum(const double x, const double k) const{
   double pofk = 0.0;
 
   //=============================================================================
   // TODO: Compute the matter power spectrum
   //=============================================================================
 
-  // ...
-  // ...
-  // ...
+  double c       = Constants.c;
+  double Phi     = pert->get_Phi(x, k);
+  double OmegaM  = cosmo->get_OmegaCDM() + cosmo->get_OmegaB();
+  double H0      = cosmo->get_H0();
+  double Delta   = pow(c*k,2)*Phi*exp(x)/(1.5*OmegaM*pow(H0,2));
+  pofk           = 2.0*pow(M_PI,2)/pow(k, 3.0)*primordial_power_spectrum(k)*pow(Delta,2);
 
   return pofk;
 }
@@ -295,3 +298,16 @@ void PowerSpectrum::output(std::string filename) const{
   std::for_each(ellvalues.begin(), ellvalues.end(), print_data);
 }
 
+void PowerSpectrum::output_matter(std::string filename) const{
+  // Print matter power spectrum:
+  std::ofstream fp(filename.c_str());
+  auto k_array = Utils::linspace(k_min, k_max, n_k);  // [Mpc]
+  double h     = cosmo->get_h();
+  double Mpc   = Constants.Mpc;
+  auto print_P_data = [&] (const double k_mpc) {
+    fp << k_mpc*Mpc/h                                  << " ";
+    fp << get_matter_power_spectrum(0.0, k_mpc)*pow(h/Mpc,3)  << " ";
+    fp << "\n";
+  };
+  std::for_each(k_array.begin(), k_array.end(), print_P_data);
+}

@@ -268,5 +268,7 @@ void BackgroundCosmology::output(const std::string filename) const{
   std::for_each(x_array.begin(), x_array.end(), print_data);
   std::cout << "Age of Universe:" << t_of_x(0.0)/(365.2425*24*60*60) << std::endl;
   std::cout << "eta_0:" << eta_of_x(0.0) << std::endl;
+  double a_r  = OmegaR/(OmegaB + OmegaCDM);
+  double k_eq = Hp_of_x(log(a_r))*Constants.Mpc/Constants.c;
+  std::cout << "k_eq: " << k_eq/h << " h/Mpc" << std::endl;
 }
-

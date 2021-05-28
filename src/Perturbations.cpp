@@ -428,7 +428,6 @@ void Perturbations::compute_source_functions(){
                         + ddHpddx*g*Theta2 + dHpdx*dgdx*Theta2 + dHpdx*g*dT2dx
                         + dHpdx*dgdx*Theta2 + Hp*ddgddx*Theta2 + Hp*dgdx*dT2dx
                         + dHpdx*g*dT2dx + Hp*dgdx*dT2dx + Hp*g*ddT2ddx);
-
       // Polarization source
       if(Constants.polarization){
         SE_array[index] = 0.0;

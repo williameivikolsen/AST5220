@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import os
 # import seaborn as sns
 
-# plt.rcParams.update({'font.size': 14})
+plt.rcParams.update({'font.size': 14})
 # plt.style.use('seaborn')
 # sns.set(font_scale=1.3)
 
@@ -111,6 +111,8 @@ plt.figure(2)
 plt.savefig('theta1.pdf')
 plt.figure(4)
 plt.savefig('phi.pdf')
+plt.figure(5)
+plt.savefig('psi.pdf')
 plt.figure(6)
 plt.savefig('delta.pdf')
 plt.figure(7)
