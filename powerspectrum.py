@@ -1,11 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import os
-import seaborn as sns
+# import seaborn as sns
 
-# plt.rcParams.update({'font.size': 14})
-plt.style.use('seaborn')
-sns.set(font_scale=1.3)
+plt.rcParams.update({'font.size': 14})
+# plt.style.use('seaborn')
+# sns.set(font_scale=1.3)
 
 data = np.loadtxt('cells.txt')
 ell  = data[:, 0]
@@ -34,7 +34,6 @@ theta_500  = theta_data[:, 3]
 theta_1000 = theta_data[:, 4]
 eta0       = 14253.3 # Mpc
 
-os.chdir('./test files')
 planck_low    = np.loadtxt('planck_cell_low.txt', skiprows=1)
 ell_low       = planck_low[:, 0]
 cell_low      = planck_low[:, 1]
@@ -46,7 +45,6 @@ cell_high     = planck_high[:, 1]
 err_up_high   = planck_high[:, 2]
 err_down_high = planck_high[:, 3]
 
-os.chdir('..')
 os.chdir('./Plots')
 
 plt.plot(k_theta, theta_100, label=r'$\ell = 100$')
@@ -61,7 +59,7 @@ plt.xlabel(r'$k$' + ' [Mpc' + r'$^{-1}$' + ']')
 plt.ylabel(r'$\Theta_\ell$')
 plt.tight_layout()
 plt.legend()
-plt.savefig('transferfunction.pdf')
+# plt.savefig('transferfunction.pdf')
 plt.show()
 
 plt.plot(k_theta, 100*(100+1)*theta_100**2/k_theta, label=r'$\ell = 100$')
@@ -72,7 +70,7 @@ plt.xlabel(r'$k$' + ' [Mpc' + r'$^{-1}$' + ']')
 plt.ylabel(r'$\ell(\ell+1)\Theta_\ell^2/k$')
 plt.tight_layout()
 plt.legend()
-plt.savefig('integrand.pdf')
+# plt.savefig('integrand.pdf')
 plt.show()
 
 plt.loglog(ell, cell, label='Theory prediction')
@@ -82,7 +80,7 @@ plt.xlabel(r'$\ell$')
 plt.ylabel(r'$\ell(\ell+1)C_\ell/2\pi$' + ' [' + r'$\mu$' + 'K' + r'$^2$' + ']')
 plt.tight_layout()
 plt.legend()
-plt.savefig('powerspectrum.pdf')
+# plt.savefig('powerspectrum.pdf')
 plt.show()
 
 plt.loglog(k, P, label='Theory prediction')
@@ -92,7 +90,7 @@ plt.xlabel(r'$k$' + ' [h/Mpc]')
 plt.ylabel(r'$P(k)$' + ' [(Mpc/h)' + r'$^3$' + ']')
 plt.tight_layout()
 plt.legend(frameon=True)
-plt.savefig('matterspectrum.pdf')
+# plt.savefig('matterspectrum.pdf')
 plt.show()
 
 plt.loglog(ell, cell, label='Full S')
@@ -104,5 +102,5 @@ plt.xlabel(r'$\ell$')
 plt.ylabel(r'$\ell(\ell+1)C_\ell/2\pi$' + ' [' + r'$\mu$' + 'K' + r'$^2$' + ']')
 plt.tight_layout()
 plt.legend(frameon=True)
-plt.savefig('Source_func.pdf')
+# plt.savefig('Source_func.pdf')
 plt.show()
